@@ -1,10 +1,22 @@
 "use client";
 
 import { NumSeq } from "@/utils/seq";
-import { AppShell, Burger, Group, Skeleton } from "@mantine/core";
+import {
+	AppShell,
+	Burger,
+	Center,
+	Group,
+	Skeleton,
+	Title,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import React from "react";
 
-export default function TheApp({ children }: { children: any }) {
+export default function TheApp({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
 	const [desktopOpened, { toggle: toggleDesktop }] =
 		useDisclosure(true);
@@ -27,20 +39,25 @@ export default function TheApp({ children }: { children: any }) {
 			}}
 			padding="md"
 		>
-			<AppShell.Header>
-				<Group h="100%" px="md">
-					<Burger
-						opened={mobileOpened}
-						onClick={toggleMobile}
-						hiddenFrom="sm"
-						size="sm"
-					/>
-					<Burger
-						opened={desktopOpened}
-						onClick={toggleDesktop}
-						visibleFrom="sm"
-						size="sm"
-					/>
+			<AppShell.Header display={Center}>
+				<Group h="100%">
+					<Group h="100%" px={10}>
+						<Burger
+							opened={mobileOpened}
+							onClick={toggleMobile}
+							hiddenFrom="sm"
+							size="sm"
+						/>
+						<Burger
+							opened={desktopOpened}
+							onClick={toggleDesktop}
+							visibleFrom="sm"
+							size="sm"
+						/>
+					</Group>
+					<Group h="100%" px={10} my={0}>
+						<Title order={2}>Database Stuff</Title>
+					</Group>
 				</Group>
 			</AppShell.Header>
 			<AppShell.Navbar p="md">

@@ -1,4 +1,7 @@
-export default function HomePage() {
+import { selectAllCustomers } from "@/server/mysql-a";
+
+export default async function HomePage() {
+	const customers = await selectAllCustomers();
 	return (
 		<article>
 			<h1>Hello, Next.js!</h1>
