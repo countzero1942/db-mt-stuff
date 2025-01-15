@@ -1,0 +1,12 @@
+/* This is for sticky table header which has a z-index of 3
+ * It hides the vertical scroll-bar, which is not a good design!
+ * The perfect solution might be to lower the scroll-bar
+ * beneath the sticky header. But this will do.
+ */
+
+.mantine-ScrollArea-thumb {
+	z-index: 6;
+}
+.mantine-ScrollArea-scrollbar {
+	z-index: 5;
+}

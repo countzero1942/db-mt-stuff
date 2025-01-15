@@ -6,11 +6,12 @@ import {
 	mantineHtmlProps,
 } from "@mantine/core";
 import { theme } from "../theme";
+import "./global.css";
 import TheApp from "./the-app";
 
 export const metadata = {
-	title: "Mantine Next.js template",
-	description: "I am using Mantine with Next.js!",
+	title: "Database Stuff",
+	description: "Database Stuff using Mantine with Next.js!",
 };
 
 export default function RootLayout({

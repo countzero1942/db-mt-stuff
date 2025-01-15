@@ -8,7 +8,7 @@ import mysql, {
 	RowDataPacket,
 } from "mysql2/promise";
 
-interface Customer extends RowDataPacket {
+export interface Customer extends RowDataPacket {
 	CustomerID: number;
 	CustomerName: string;
 	ContactName: string;

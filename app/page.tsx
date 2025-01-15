@@ -1,62 +1,20 @@
-import { selectAllCustomers } from "@/server/mysql-a";
-import { CodeBlock, CodeBlockProps } from "@/ui/code-block";
-import {
-	Table,
-	Title,
-	TableTr,
-	TableThead,
-	TableTd,
-	TableTbody,
-	TableTh,
-	TableScrollContainer,
-	ScrollArea,
-	Divider,
-} from "@mantine/core";
+import SelectAllCustomersSection from "@/app/select-all-customers";
+import { Divider, Title } from "@mantine/core";
 
 export default async function HomePage() {
-	const customers = await selectAllCustomers();
-	const rows = customers.map(customer => (
-		<TableTr key={customer.CustomerID}>
-			<TableTd>{customer.CustomerID}</TableTd>
-			<TableTd>{customer.CustomerName}</TableTd>
-			<TableTd>{customer.ContactName}</TableTd>
-			<TableTd>{customer.Address}</TableTd>
-			<TableTd>{customer.City}</TableTd>
-			<TableTd>{customer.PostalCode}</TableTd>
-			<TableTd>{customer.Country}</TableTd>
-		</TableTr>
-	));
-
-	const cb1: CodeBlockProps = {
-		codeString: `select * from customers limit 10;`,
-		language: "sql",
-	};
-
 	return (
 		<article>
 			<Title order={1} my="lg">
 				Hello, Next.js!
 			</Title>
-			<Title order={2} my="md">
-				Test MySQL
-			</Title>
-			<CodeBlock {...cb1} />
-			<ScrollArea type="scroll" h={300}>
-				<Table stickyHeader>
-					<TableThead>
-						<TableTr>
-							<TableTh>CustomerID</TableTh>
-							<TableTh>CustomerName</TableTh>
-							<TableTh>ContactName</TableTh>
-							<TableTh>Address</TableTh>
-							<TableTh>City</TableTh>
-							<TableTh>Postal Code</TableTh>
-							<TableTh>Country</TableTh>
-						</TableTr>
-					</TableThead>
-					<TableTbody>{rows}</TableTbody>
-				</Table>
-			</ScrollArea>
+
+			<Title order={1}>Heading 1</Title>
+			<Title order={2}>Heading 2</Title>
+			<Title order={3}>Heading 3</Title>
+			<Title order={4}>Heading 4</Title>
+			<Title order={5}>Heading 5</Title>
+			<Title order={6}>Heading 6</Title>
+
 			<Divider variant="solid" my="lg" />
 		</article>
 	);
