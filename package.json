@@ -4,13 +4,14 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "next build",
+		"build": "NODE_OPTIONS='--trace-deprecation' next build",
 		"start": "next start",
 		"lint": "next lint"
 	},
 	"dependencies": {
 		"@mantine/core": "7.15.3",
 		"@mantine/hooks": "7.15.3",
+		"clsx": "^2.1.1",
 		"crypto-random-string": "^5.0.0",
 		"memoizee": "^0.4.17",
 		"moderndash": "^4.0.0",
