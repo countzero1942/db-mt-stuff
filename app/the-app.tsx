@@ -56,7 +56,7 @@ export default function TheApp({
 						/>
 					</Group>
 					<Group h="100%" px={10} my={0}>
-						<Title order={2}>Database Stuff</Title>
+						<h2>Database Stuff</h2>
 					</Group>
 				</Group>
 			</AppShell.Header>

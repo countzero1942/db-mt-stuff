@@ -5,7 +5,7 @@ import {
 	ColorSchemeScript,
 	mantineHtmlProps,
 } from "@mantine/core";
-import { theme } from "../theme";
+import { theme } from "@/styles/theme";
 import "@/styles/global.css";
 import TheApp from "./the-app";
 import { logobj } from "@/utils/log";

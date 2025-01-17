@@ -2230,6 +2230,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fdir@npm:^6.4.2":
+  version: 6.4.2
+  resolution: "fdir@npm:6.4.2"
+  peerDependencies:
+    picomatch: ^3 || ^4
+  peerDependenciesMeta:
+    picomatch:
+      optional: true
+  checksum: 10c0/34829886f34a3ca4170eca7c7180ec4de51a3abb4d380344063c0ae2e289b11d2ba8b724afee974598c83027fea363ff598caf2b51bc4e6b1e0d8b80cc530573
+  languageName: node
+  linkType: hard
+
 "file-entry-cache@npm:^8.0.0":
   version: 8.0.0
   resolution: "file-entry-cache@npm:8.0.0"
@@ -3474,6 +3486,7 @@ __metadata:
     mysql2: "npm:^3.12.0"
     next: "npm:15.1.4"
     postcss: "npm:8.4.49"
+    postcss-mixins: "npm:^11.0.3"
     postcss-preset-mantine: "npm:1.17.0"
     postcss-simple-vars: "npm:7.0.1"
     react: "npm:19.0.0"
@@ -3966,6 +3979,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"picomatch@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "picomatch@npm:4.0.2"
+  checksum: 10c0/7c51f3ad2bb42c776f49ebf964c644958158be30d0a510efd5a395e8d49cb5acfed5b82c0c5b365523ce18e6ab85013c9ebe574f60305892ec3fa8eee8304ccc
+  languageName: node
+  linkType: hard
+
 "possible-typed-array-names@npm:^1.0.0":
   version: 1.0.0
   resolution: "possible-typed-array-names@npm:1.0.0"
@@ -3973,7 +3993,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-js@npm:^4.0.0":
+"postcss-js@npm:^4.0.0, postcss-js@npm:^4.0.1":
   version: 4.0.1
   resolution: "postcss-js@npm:4.0.1"
   dependencies:
@@ -3981,6 +4001,20 @@ __metadata:
   peerDependencies:
     postcss: ^8.4.21
   checksum: 10c0/af35d55cb873b0797d3b42529514f5318f447b134541844285c9ac31a17497297eb72296902967911bb737a75163441695737300ce2794e3bd8c70c13a3b106e
+  languageName: node
+  linkType: hard
+
+"postcss-mixins@npm:^11.0.3":
+  version: 11.0.3
+  resolution: "postcss-mixins@npm:11.0.3"
+  dependencies:
+    postcss-js: "npm:^4.0.1"
+    postcss-simple-vars: "npm:^7.0.1"
+    sugarss: "npm:^4.0.1"
+    tinyglobby: "npm:^0.2.7"
+  peerDependencies:
+    postcss: ^8.2.14
+  checksum: 10c0/dc19aafb4ae7de4a4f1a496e3cd35d33e97e6b3175799b8a2337335bb29c8dea5d474a89a0da44a7d5966cbee070b8bc333b4dd4e907ceb8734e983316aab862
   languageName: node
   linkType: hard
 
@@ -4031,7 +4065,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-simple-vars@npm:7.0.1, postcss-simple-vars@npm:^7.0.0":
+"postcss-simple-vars@npm:7.0.1, postcss-simple-vars@npm:^7.0.0, postcss-simple-vars@npm:^7.0.1":
   version: 7.0.1
   resolution: "postcss-simple-vars@npm:7.0.1"
   peerDependencies:
@@ -5024,6 +5058,16 @@ __metadata:
     globalyzer: "npm:0.1.0"
     globrex: "npm:^0.1.2"
   checksum: 10c0/cbe072f0d213a1395d30aa94845a051d4af18fe8ffb79c8e99ac1787cd25df69083f17791a53997cb65f469f48950cb61426ccc0683cc9df170ac2430e883702
+  languageName: node
+  linkType: hard
+
+"tinyglobby@npm:^0.2.7":
+  version: 0.2.10
+  resolution: "tinyglobby@npm:0.2.10"
+  dependencies:
+    fdir: "npm:^6.4.2"
+    picomatch: "npm:^4.0.2"
+  checksum: 10c0/ce946135d39b8c0e394e488ad59f4092e8c4ecd675ef1bcd4585c47de1b325e61ec6adfbfbe20c3c2bfa6fd674c5b06de2a2e65c433f752ae170aff11793e5ef
   languageName: node
   linkType: hard
 
