@@ -1,5 +1,6 @@
 "use client";
 
+import NavLinks from "@/app/nav-links";
 import { NumSeq } from "@/utils/seq";
 import {
 	AppShell,
@@ -61,10 +62,7 @@ export default function TheApp({
 				</Group>
 			</AppShell.Header>
 			<AppShell.Navbar p="md">
-				Navbar
-				{NumSeq.count(15).imap(index => (
-					<Skeleton key={index} h={28} mt="sm" animate={false} />
-				))}
+				<NavLinks />
 			</AppShell.Navbar>
 			<AppShell.Main>{children}</AppShell.Main>
 		</AppShell>

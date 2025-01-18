@@ -41,8 +41,6 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	log("theme");
-	log(theme);
 	return (
 		<html
 			lang="en"
