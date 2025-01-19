@@ -1,6 +1,6 @@
 "use client";
 
-import { Customer, selectAllCustomers } from "@/server/mysql-a";
+import { Customer, selectCustomers } from "@/server/mysql-a";
 import { CodeBlockProps, CodeBlock } from "@/ui/code-block";
 import {
 	TableTr,
@@ -34,9 +34,9 @@ const getTable = (customers?: Customer[]) => {
 		);
 	}
 
-	const titles = Object.keys(customers[0]).map(key =>
-		splitWords(key).join(" ")
-	);
+	const keys = Object.keys(customers[0]);
+
+	const titles = keys.map(key => splitWords(key).join(" "));
 
 	const head = (
 		<TableTr>
@@ -48,13 +48,9 @@ const getTable = (customers?: Customer[]) => {
 
 	const rows = customers.map(customer => (
 		<TableTr key={customer.CustomerID}>
-			<TableTd>{customer.CustomerID}</TableTd>
-			<TableTd>{customer.CustomerName}</TableTd>
-			<TableTd>{customer.ContactName}</TableTd>
-			<TableTd>{customer.Address}</TableTd>
-			<TableTd>{customer.City}</TableTd>
-			<TableTd>{customer.PostalCode}</TableTd>
-			<TableTd>{customer.Country}</TableTd>
+			{keys.map((key, index) => (
+				<TableTd key={`${key}-${index}`}>{customer[key]}</TableTd>
+			))}
 		</TableTr>
 	));
 
@@ -64,7 +60,7 @@ const getTable = (customers?: Customer[]) => {
 			<ScrollArea
 				type="auto"
 				h={300}
-				offsetScrollbars="x"
+				offsetScrollbars="y"
 				bd="1px solid var(--mantine-color-default-border)"
 				my="md"
 			>
@@ -77,7 +73,15 @@ const getTable = (customers?: Customer[]) => {
 	);
 };
 
-export default function SelectAllCustomersSection() {
+export type SelectCustomersSectionProps = {
+	sqlQuery: string;
+	title: string;
+};
+
+export default function SelectCustomersSection({
+	sqlQuery,
+	title,
+}: SelectCustomersSectionProps) {
 	// const customers = await selectAllCustomers();
 
 	let [customers, setCustomers] = useState<Customer[] | undefined>(
@@ -85,14 +89,13 @@ export default function SelectAllCustomersSection() {
 	);
 
 	const codeBlockProps: CodeBlockProps = {
-		codeString: `select * from customers;`,
+		codeString: sqlQuery,
 		language: "sql",
 	};
 
 	async function handleSelectAllCustomers() {
-		const results = await selectAllCustomers();
+		const results = await selectCustomers(sqlQuery);
 		setCustomers(results);
-		// setCustomers([]);
 	}
 
 	function handleClearAllCustomers() {
@@ -101,7 +104,7 @@ export default function SelectAllCustomersSection() {
 
 	return (
 		<>
-			<h2>SELECT All Customers</h2>
+			<h2>{title}</h2>
 			<CodeBlock {...codeBlockProps} />
 			<Group my="md">
 				<Button onClick={handleSelectAllCustomers}>

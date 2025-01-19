@@ -89,10 +89,6 @@ h6 {
 }
 
 p {
-	/* --color: var(--mantine-color-blue-4);
-	color: var(--color);
-	text-shadow: 3px 3px 3px
-		color-mix(in srgb, black 30%, var(--color)); */
 	@mixin p-shadow-light var(--mantine-color-blue-4);
 }
 
@@ -113,9 +109,13 @@ p {
 	@mixin p-shadow-dark var(--mantine-color-blue-2);
 }
 
-.mantine-Table-thead .mantine-Table-tr {
-	@mixin dark {
+[data-mantine-color-scheme="dark"]
+	.mantine-Table-thead
+	.mantine-Table-tr {
+	/* @mixin dark {
 		background-color: var(--mantine-color-blue-8);
 		@mixin p-shadow-dark white;
-	}
+	} */
+	background-color: var(--mantine-color-blue-8);
+	@mixin p-shadow-dark white;
 }

@@ -1,5 +1,7 @@
-import SelectAllCustomersSection from "@/app/w3schools-mysql/select-basics/select-all-customers";
+import SelectAllCustomersSection from "@/app/w3schools-mysql/select-basics/select-customers";
+import { div } from "@/utils/log";
 import { Divider, Title } from "@mantine/core";
+import { log } from "console";
 
 export default async function HomePage() {
 	return (

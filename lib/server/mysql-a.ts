@@ -18,7 +18,9 @@ export interface Customer extends RowDataPacket {
 	Country: string;
 }
 
-export const selectAllCustomers = async (): Promise<Customer[]> => {
+export const selectCustomers = async (
+	query: string
+): Promise<Customer[]> => {
 	const access: ConnectionOptions = {
 		host: "172.27.80.1",
 		user: "me",
@@ -30,9 +32,7 @@ export const selectAllCustomers = async (): Promise<Customer[]> => {
 	try {
 		const conn = await mysql.createConnection(access);
 
-		const [customers] = await conn.query<Customer[]>(
-			"SELECT * FROM customers"
-		);
+		const [customers] = await conn.query<Customer[]>(query);
 
 		conn.end();
 
