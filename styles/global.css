@@ -16,7 +16,7 @@
 
 :root {
 	--iu-hx-line-height: 1;
-	--iu-hx-margin-height: 0.5;
+	--iu-hx-margin-height: 0.75;
 	--iu-h1-font-size: 2rem;
 	--iu-h2-font-size: calc(var(--iu-h1-font-size) * 0.9);
 	--iu-h3-font-size: calc(var(--iu-h1-font-size) * 0.8);
@@ -37,7 +37,7 @@
 
 @define-mixin hx-color $color {
 	color: $color;
-	text-shadow: 4px 4px 4px color-mix(in srgb, black 40%, $color);
+	text-shadow: 4px 4px 4px color-mix(in srgb, black 50%, $color);
 }
 
 @define-mixin hx-size $size, $w {
@@ -65,14 +65,6 @@ h6 {
 	line-height: var(--iu-hx-line-height);
 }
 
-/* h1 {
-	@mixin hx-color var(--iu-h1-color) {
-	}
-	@mixin hx-size var(--iu-h1-font-size) {
-	}
-	font-weight: 900;
-} */
-
 @mixin hx h1, 900 {
 }
 @mixin hx h2, 900 {
@@ -86,9 +78,44 @@ h6 {
 @mixin hx h6, 800 {
 }
 
+@define-mixin p-shadow-light $color {
+	color: $color;
+	text-shadow: 2px 2px 3px color-mix(in srgb, black 30%, $color);
+}
+
+@define-mixin p-shadow-dark $color {
+	color: $color;
+	text-shadow: 2px 2px 2px color-mix(in srgb, black 100%, $color);
+}
+
 p {
-	--color: var(--mantine-color-blue-4);
+	/* --color: var(--mantine-color-blue-4);
 	color: var(--color);
 	text-shadow: 3px 3px 3px
-		color-mix(in srgb, black 30%, var(--color));
+		color-mix(in srgb, black 30%, var(--color)); */
+	@mixin p-shadow-light var(--mantine-color-blue-4);
+}
+
+[data-mantine-color-scheme="dark"] .mantine-Table-tr {
+	--table-striped-color: alpha(var(--mantine-color-blue-8), 0.3);
+	@mixin p-shadow-light var(--mantine-color-blue-4);
+}
+
+[data-mantine-color-scheme="dark"]
+	.mantine-Table-tr:where([data-striped="odd"]:nth-of-type(odd)) {
+	background-color: var(--table-striped-color);
+	@mixin p-shadow-dark var(--mantine-color-blue-2);
+}
+
+[data-mantine-color-scheme="dark"]
+	.mantine-Table-tr:where([data-striped="even"]:nth-of-type(even)) {
+	background-color: var(--table-striped-color);
+	@mixin p-shadow-dark var(--mantine-color-blue-2);
+}
+
+.mantine-Table-thead .mantine-Table-tr {
+	@mixin dark {
+		background-color: var(--mantine-color-blue-8);
+		@mixin p-shadow-dark white;
+	}
 }

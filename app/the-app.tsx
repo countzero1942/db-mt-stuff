@@ -57,7 +57,7 @@ export default function TheApp({
 						/>
 					</Group>
 					<Group h="100%" px={10} my={0}>
-						<h2>Database Stuff</h2>
+						<h2 style={{ margin: 0 }}>Database Stuff</h2>
 					</Group>
 				</Group>
 			</AppShell.Header>

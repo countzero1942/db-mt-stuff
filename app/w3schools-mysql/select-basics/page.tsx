@@ -1,3 +1,5 @@
+import SelectAllCustomersSection from "@/app/w3schools-mysql/select-basics/select-all-customers";
+
 export default function SelectBasicsPage() {
 	return (
 		<article>
@@ -7,6 +9,8 @@ export default function SelectBasicsPage() {
 				In this section we will explore the basics of using MySql
 				SELECT commands.
 			</p>
+
+			<SelectAllCustomersSection />
 		</article>
 	);
 }

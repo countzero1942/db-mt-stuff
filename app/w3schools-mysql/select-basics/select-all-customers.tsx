@@ -60,9 +60,7 @@ const getTable = (customers?: Customer[]) => {
 
 	return (
 		<>
-			<Title order={3} my="md">
-				Results
-			</Title>
+			<h3>Results</h3>
 			<ScrollArea
 				type="auto"
 				h={300}
@@ -93,8 +91,8 @@ export default function SelectAllCustomersSection() {
 
 	async function handleSelectAllCustomers() {
 		const results = await selectAllCustomers();
-		// setCustomers(results);
-		setCustomers([]);
+		setCustomers(results);
+		// setCustomers([]);
 	}
 
 	function handleClearAllCustomers() {
@@ -103,9 +101,7 @@ export default function SelectAllCustomersSection() {
 
 	return (
 		<>
-			<Title order={2} my="md">
-				Select All Customers
-			</Title>
+			<h2>SELECT All Customers</h2>
 			<CodeBlock {...codeBlockProps} />
 			<Group my="md">
 				<Button onClick={handleSelectAllCustomers}>

@@ -34,8 +34,6 @@ export const selectAllCustomers = async (): Promise<Customer[]> => {
 			"SELECT * FROM customers"
 		);
 
-		logobj(customers);
-
 		conn.end();
 
 		return customers;

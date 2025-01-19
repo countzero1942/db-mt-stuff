@@ -72,7 +72,7 @@ const getCurrentNavLinks = (pathName: string): NavLinksInfo => {
 			links: parentLinks,
 		};
 	}
-	// default to root links
+	// defaults to root links
 	return {
 		dir: "/",
 		links: navLinksDict["/"],
@@ -81,7 +81,6 @@ const getCurrentNavLinks = (pathName: string): NavLinksInfo => {
 
 export default function NavLinks() {
 	const pathName = usePathname();
-	// const navLinks = getCurrentNavLinks(pathName);
 
 	const [navLinksInfo, setNavLinksInfo] = useState<NavLinksInfo>(
 		getCurrentNavLinks("/")
@@ -90,8 +89,8 @@ export default function NavLinks() {
 	useEffect(() => {
 		const newNavLinksInfo = getCurrentNavLinks(pathName);
 		setNavLinksInfo(newNavLinksInfo);
-		console.log("useEffect called with pathName: ", pathName);
-		console.log("navLinks: ", newNavLinksInfo);
+		// console.log("useEffect called with pathName: ", pathName);
+		// console.log("navLinks: ", newNavLinksInfo);
 	}, [pathName]); // Only re-run this effect if the pathName changes)
 
 	const HomeBreadCrumb = () => {
@@ -116,9 +115,7 @@ export default function NavLinks() {
 			return (
 				<FaChevronRight
 					size="0.5rem"
-					style={{
-						verticalAlign: "bottom",
-					}}
+					style={{ marginTop: "0.25rem" }}
 				/>
 			);
 		}
