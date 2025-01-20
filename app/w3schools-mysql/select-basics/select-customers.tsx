@@ -1,5 +1,6 @@
 "use client";
 
+import { cleanMySqlQuery } from "@/client-data/mysql";
 import { Customer, selectCustomers } from "@/server/mysql-a";
 import { CodeBlockProps, CodeBlock } from "@/ui/code-block";
 import {
@@ -83,18 +84,19 @@ export default function SelectCustomersSection({
 	title,
 }: SelectCustomersSectionProps) {
 	// const customers = await selectAllCustomers();
+	const cleanedSqlQuery = cleanMySqlQuery(sqlQuery);
 
 	let [customers, setCustomers] = useState<Customer[] | undefined>(
 		undefined
 	);
 
 	const codeBlockProps: CodeBlockProps = {
-		codeString: sqlQuery,
+		codeString: cleanedSqlQuery,
 		language: "sql",
 	};
 
 	async function handleSelectAllCustomers() {
-		const results = await selectCustomers(sqlQuery);
+		const results = await selectCustomers(cleanedSqlQuery);
 		setCustomers(results);
 	}
 

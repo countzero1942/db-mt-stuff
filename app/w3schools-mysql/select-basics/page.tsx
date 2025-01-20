@@ -1,24 +1,29 @@
 import SelectCustomersSection from "@/app/w3schools-mysql/select-basics/select-customers";
+import { cleanMySqlQuery } from "@/client-data/mysql";
 import { cleanMultiLineString } from "@/utils/string";
 import { Divider } from "@mantine/core";
 
 export default function SelectBasicsPage() {
 	const sqlLast10Customers = `
-		SELECT * FROM
+		select * from
 		(
-			SELECT * FROM customers 
-			ORDER BY CustomerID DESC 
-			LIMIT 10
-		) AS sub
-		ORDER BY CustomerID ASC;   
+			select * from Customers 
+			order by CustomerID desc 
+			limit 10
+		) as x
+		order by CustomerID asc;   
 	`;
 
-	const sqlLast10CustomersWithOffset = `
-		SELECT * FROM customers
-		ORDER BY CustomerID DESC
-		LIMIT 10 OFFSET (n - 10);
+	const sqlCustomersFromMexico = `
+		SELECT * FROM Customers 
+		WHERE Country = 'Mexico';
+   `;
+
+	const sqlSelectColumns = `
+		select CustomerID, CustomerName, City from Customers
+		where Country='USA'	
 	`;
-	// ... rest of the page content...
+
 	return (
 		<article>
 			<h1>SELECT Basics</h1>
@@ -29,31 +34,36 @@ export default function SelectBasicsPage() {
 			</p>
 
 			<SelectCustomersSection
-				title="SELECT all from Customers"
-				sqlQuery="select * from customers"
+				title="SELECT all columns from Customers"
+				sqlQuery="select * from Customers"
 			/>
 
 			<Divider my="2rem" />
 
 			<SelectCustomersSection
-				title="SELECT all from Customers with limit 10"
-				sqlQuery="select * from customers limit 10"
+				title="SELECT all columns from Customers with limit 10"
+				sqlQuery="select * from Customers limit 10"
 			/>
 
 			<Divider my="2rem" />
 
 			<SelectCustomersSection
-				title="SELECT all from Customers: last 10 with offset"
-				sqlQuery={cleanMultiLineString(sqlLast10Customers)}
+				title="SELECT last 10 Customers"
+				sqlQuery={sqlLast10Customers}
 			/>
 
 			<Divider my="2rem" />
 
 			<SelectCustomersSection
-				title="SELECT all from Customers: limit last 10"
-				sqlQuery={cleanMultiLineString(
-					sqlLast10CustomersWithOffset
-				)}
+				title="SELECT Customers from Mexico with WHERE"
+				sqlQuery={sqlCustomersFromMexico}
+			/>
+
+			<Divider my="2rem" />
+
+			<SelectCustomersSection
+				title="SELECT columns from Customers"
+				sqlQuery={sqlSelectColumns}
 			/>
 
 			<Divider my="2rem" />
