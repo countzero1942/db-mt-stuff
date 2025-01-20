@@ -25,6 +25,7 @@
 			"@/utils/*": ["lib/utils/*"],
 			"@/types/*": ["lib/types/*"],
 			"@/server/*": ["lib/server/*"],
+			"@/client-data/*": ["lib/client-data/*"],
 			"@/ui/*": ["lib/ui/*"],
 			"@/styles/*": ["styles/*"]
 		}

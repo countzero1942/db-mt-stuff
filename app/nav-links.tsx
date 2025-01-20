@@ -1,100 +1,30 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import path from "path";
 import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { Divider, NavLink } from "@mantine/core";
 import { FaChevronRight } from "react-icons/fa";
-
-type NavLink = {
-	label: string;
-	href: string;
-	children?: boolean;
-};
-
-type NavLinksInfo = {
-	dir: string;
-	links: NavLink[];
-};
-
-const navLinksDict: Record<string, NavLink[]> = {
-	"/": [
-		{ label: "Home", href: "/" },
-		{
-			label: "W3Schools MySQL",
-			href: "/w3schools-mysql",
-			children: true,
-		},
-		{ label: "Styling", href: "/styling", children: true },
-		{ label: "About", href: "/about" },
-	],
-	"/w3schools-mysql": [
-		{ label: "W3 MySQL Home", href: "/w3schools-mysql" },
-		{
-			label: "SELECT Basics",
-			href: "/w3schools-mysql/select-basics",
-		},
-		{
-			label: "More SELECT",
-			href: "/w3schools-mysql/more-select",
-		},
-	],
-	"/styling": [
-		{ label: "Styling Home", href: "/styling" },
-		{
-			label: "Headings and Text",
-			href: "/styling/headings-and-text",
-		},
-		{
-			label: "Some Other Stuff",
-			href: "/styling/some-other-stuff",
-		},
-	],
-};
-
-const getCurrentNavLinks = (pathName: string): NavLinksInfo => {
-	// lands on home page of folder
-	const homePageLinks = navLinksDict[pathName];
-	if (homePageLinks !== undefined) {
-		return {
-			dir: pathName,
-			links: homePageLinks,
-		};
-	}
-	// lands on a child page of folder
-	const pathInfo = path.parse(pathName);
-	const parentLinks = navLinksDict[pathInfo.dir];
-	if (parentLinks !== undefined) {
-		return {
-			dir: pathInfo.dir,
-			links: parentLinks,
-		};
-	}
-	// defaults to root links
-	return {
-		dir: "/",
-		links: navLinksDict["/"],
-	};
-};
+import {
+	getCurrentNavLinks,
+	NavLinksInfo,
+} from "@/client-data/nav-links";
 
 export default function NavLinks() {
 	const pathName = usePathname();
 
-	const [navLinksInfo, setNavLinksInfo] = useState<NavLinksInfo>(
-		getCurrentNavLinks("/")
-	);
+	const [navLinksInfo, setNavLinksInfo] = useState<
+		NavLinksInfo | undefined
+	>(undefined);
 
 	useEffect(() => {
 		const newNavLinksInfo = getCurrentNavLinks(pathName);
 		setNavLinksInfo(newNavLinksInfo);
-		// console.log("useEffect called with pathName: ", pathName);
-		// console.log("navLinks: ", newNavLinksInfo);
-	}, [pathName]); // Only re-run this effect if the pathName changes)
+	}, [pathName]); // Only render on 'pathName' change
 
 	const HomeBreadCrumb = () => {
-		if (navLinksInfo.dir !== "/") {
+		if (navLinksInfo !== undefined && navLinksInfo.dir !== "/") {
 			return (
 				<>
 					<NavLink
@@ -122,21 +52,28 @@ export default function NavLinks() {
 		return null;
 	};
 
-	return (
-		<>
-			<HomeBreadCrumb />
-			{navLinksInfo.links.map(({ label, href, children }) => {
-				return (
-					<NavLink
-						key={label}
-						label={label}
-						component={Link}
-						href={href}
-						active={pathName === href}
-						rightSection={getChildrenIcon(children)}
-					/>
-				);
-			})}
-		</>
-	);
+	const NavLinksBody = () => {
+		if (navLinksInfo === undefined) {
+			return <div>Loading...</div>;
+		}
+		return (
+			<>
+				<HomeBreadCrumb />
+				{navLinksInfo.links.map(({ label, href, children }) => {
+					return (
+						<NavLink
+							key={label}
+							label={label}
+							component={Link}
+							href={href}
+							active={pathName === href}
+							rightSection={getChildrenIcon(children)}
+						/>
+					);
+				})}
+			</>
+		);
+	};
+
+	return <NavLinksBody />;
 }

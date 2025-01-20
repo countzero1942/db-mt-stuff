@@ -1,12 +1,12 @@
 import "@mantine/core/styles.css";
+import "@/styles/global.css";
+import { theme } from "styles/theme";
 import React from "react";
 import {
 	MantineProvider,
 	ColorSchemeScript,
 	mantineHtmlProps,
 } from "@mantine/core";
-import { theme } from "@/styles/theme";
-import "@/styles/global.css";
 import TheApp from "./the-app";
 import { logobj } from "@/utils/log";
 import { log } from "console";

@@ -1,8 +1,11 @@
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+// import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import sql from "react-syntax-highlighter/dist/esm/languages/prism/sql";
 import {
 	dark,
 	coldarkDark,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
+SyntaxHighlighter.registerLanguage("sql", sql);
 
 export type CodeBlockProps = {
 	codeString: string;
