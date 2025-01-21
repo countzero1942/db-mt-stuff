@@ -1,4 +1,4 @@
-import SelectAllCustomersSection from "@/app/w3schools-mysql/select-basics/select-customers";
+import SelectAllCustomersSection from "@/app/w3schools-mysql/select-basics/select-query";
 import { div } from "@/utils/log";
 import { Divider, Title } from "@mantine/core";
 import { log } from "console";

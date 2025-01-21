@@ -1,4 +1,4 @@
-import SelectCustomersSection from "@/app/w3schools-mysql/select-basics/select-customers";
+import SelectQuerySection from "@/app/w3schools-mysql/select-basics/select-query";
 import { cleanMySqlQuery } from "@/client-data/mysql";
 import { cleanMultiLineString } from "@/utils/string";
 import { Divider } from "@mantine/core";
@@ -19,9 +19,19 @@ export default function SelectBasicsPage() {
 		WHERE Country = 'Mexico';
    `;
 
-	const sqlSelectColumns = `
-		select CustomerID, CustomerName, City from Customers
+	const sqlSelectColumnsUSAUSAUSA = `
+		select CustomerID, CustomerName, City 
+			from Customers
 		where Country='USA'	
+	`;
+
+	const sqlDistinctCountriesNumbered = `
+		select @i:=@i+1 AS 'Row', q.* from
+		(
+			select distinct Country from Customers
+			order by Country asc
+		) as q,
+		(SELECT @i:=0) AS x	
 	`;
 
 	return (
@@ -33,37 +43,53 @@ export default function SelectBasicsPage() {
 				SELECT commands.
 			</p>
 
-			<SelectCustomersSection
+			<SelectQuerySection
 				title="SELECT all columns from Customers"
 				sqlQuery="select * from Customers"
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectCustomersSection
+			<SelectQuerySection
 				title="SELECT all columns from Customers with limit 10"
 				sqlQuery="select * from Customers limit 10"
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectCustomersSection
+			<SelectQuerySection
 				title="SELECT last 10 Customers"
 				sqlQuery={sqlLast10Customers}
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectCustomersSection
+			<SelectQuerySection
 				title="SELECT Customers from Mexico with WHERE"
 				sqlQuery={sqlCustomersFromMexico}
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectCustomersSection
-				title="SELECT columns from Customers"
-				sqlQuery={sqlSelectColumns}
+			<SelectQuerySection
+				title="SELECT DISTINCT Country from Customers"
+				sqlQuery="SELECT DISTINCT Country FROM Customers;"
+			/>
+
+			<Divider my="2rem" />
+
+			<SelectQuerySection
+				title="SELECT DISTINCT Countries with Row number"
+				sqlQuery={sqlDistinctCountriesNumbered}
+			/>
+
+			<Divider my="2rem" />
+
+			<SelectQuerySection
+				title="SELECT specific columns: USA! USA! USA!"
+				sqlQuery={sqlSelectColumnsUSAUSAUSA}
+				addRowNumbers={true}
+				description="SQL query is wrapped in a subquery to add a row number column."
 			/>
 
 			<Divider my="2rem" />

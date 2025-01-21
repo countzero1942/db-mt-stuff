@@ -1,8 +1,12 @@
 "use client";
 
-import { cleanMySqlQuery } from "@/client-data/mysql";
+import {
+	cleanMySqlQuery,
+	cleanMySqlQueryArray,
+} from "@/client-data/mysql";
 import { Customer, selectCustomers } from "@/server/mysql-a";
 import { CodeBlockProps, CodeBlock } from "@/ui/code-block";
+import { cleanMultiLineArray } from "@/utils/string";
 import {
 	TableTr,
 	TableTd,
@@ -18,13 +22,14 @@ import {
 } from "@mantine/core";
 import { get } from "http";
 import { set, splitWords } from "moderndash";
+import { RowDataPacket } from "mysql2/promise";
 import { Suspense, useState } from "react";
 
-const getTable = (customers?: Customer[]) => {
-	if (!customers) {
+const getTable = (rows?: RowDataPacket[]) => {
+	if (!rows) {
 		return <></>;
 	}
-	if (customers.length === 0) {
+	if (rows.length === 0) {
 		return (
 			<>
 				<Title order={3} my="md">
@@ -35,11 +40,11 @@ const getTable = (customers?: Customer[]) => {
 		);
 	}
 
-	const keys = Object.keys(customers[0]);
+	const keys = Object.keys(rows[0]);
 
 	const titles = keys.map(key => splitWords(key).join(" "));
 
-	const head = (
+	const tableHeadRow = (
 		<TableTr>
 			{titles.map(title => (
 				<TableTh key={title}>{title}</TableTh>
@@ -47,10 +52,10 @@ const getTable = (customers?: Customer[]) => {
 		</TableTr>
 	);
 
-	const rows = customers.map(customer => (
-		<TableTr key={customer.CustomerID}>
+	const tableRows = rows.map((row, index) => (
+		<TableTr key={`row: ${index}`}>
 			{keys.map((key, index) => (
-				<TableTd key={`${key}-${index}`}>{customer[key]}</TableTd>
+				<TableTd key={`${key}-${index}`}>{row[key]}</TableTd>
 			))}
 		</TableTr>
 	));
@@ -66,8 +71,8 @@ const getTable = (customers?: Customer[]) => {
 				my="md"
 			>
 				<Table stickyHeader striped withColumnBorders>
-					<TableThead>{head}</TableThead>
-					<TableTbody>{rows}</TableTbody>
+					<TableThead>{tableHeadRow}</TableThead>
+					<TableTbody>{tableRows}</TableTbody>
 				</Table>
 			</ScrollArea>
 		</>
@@ -77,14 +82,35 @@ const getTable = (customers?: Customer[]) => {
 export type SelectCustomersSectionProps = {
 	sqlQuery: string;
 	title: string;
+	description?: string;
+	addRowNumbers?: boolean;
 };
 
-export default function SelectCustomersSection({
+export default function SelectQuerySection({
 	sqlQuery,
 	title,
+	description,
+	addRowNumbers,
 }: SelectCustomersSectionProps) {
-	// const customers = await selectAllCustomers();
-	const cleanedSqlQuery = cleanMySqlQuery(sqlQuery);
+	const getCleanedQuery = () => {
+		if (addRowNumbers) {
+			let lines = sqlQuery.split("\n").map(line => line.trimEnd());
+			lines = cleanMultiLineArray(lines, { extraIndents: 1 });
+			lines = [
+				"SELECT @i:=@i+1 AS 'Row', q.*",
+				"FROM (",
+				...lines,
+				")",
+				"AS q,",
+				"(SELECT @i:=0) AS x",
+			];
+			lines = cleanMySqlQueryArray(lines);
+			return lines.join("\n");
+		}
+		return cleanMySqlQuery(sqlQuery);
+	};
+
+	const cleanedSqlQuery = getCleanedQuery();
 
 	let [customers, setCustomers] = useState<Customer[] | undefined>(
 		undefined
@@ -104,9 +130,17 @@ export default function SelectCustomersSection({
 		setCustomers(undefined);
 	}
 
+	const Description = () => {
+		if (description) {
+			return <p>{description}</p>;
+		}
+		return null;
+	};
+
 	return (
 		<>
 			<h2>{title}</h2>
+			<Description />
 			<CodeBlock {...codeBlockProps} />
 			<Group my="md">
 				<Button onClick={handleSelectAllCustomers}>

@@ -80,13 +80,20 @@ const mysqlKeywords = [
 
 const mysqlKeywordSet = new Set(mysqlKeywords);
 
-export const cleanMySqlQuery = (
-	query: string,
-	tabString: string = "\t"
-) => {
-	let lines = query.split("\n").map(line => line.trimEnd());
+export const cleanMySqlQueryArray = (
+	lines: string[],
+	options?: {
+		tabString?: string;
+		extraIndents?: number;
+	}
+): string[] => {
+	const tabString = options?.tabString ?? "\t";
+	const extraIndents = options?.extraIndents ?? 0;
 
-	lines = cleanMultiLineArray(lines, tabString);
+	const extraIndentString =
+		extraIndents > 0 ? tabString.repeat(extraIndents) : "";
+
+	lines = cleanMultiLineArray(lines, { tabString: tabString });
 
 	lines = lines.map(line => {
 		const numTabs = getRepeatingMatchesCount(line, tabString);
@@ -100,7 +107,39 @@ export const cleanMySqlQuery = (
 				? upperCaseWord
 				: word;
 		});
-		return `${indent}${cleanedWords.join(" ")}`;
+		return `${extraIndentString}${indent}${cleanedWords.join(" ")}`;
 	});
+
+	return lines;
+};
+
+export const cleanMySqlQuery = (
+	query: string,
+	options?: {
+		tabString?: string;
+		extraIndents?: number;
+	}
+) => {
+	let lines = query.split("\n").map(line => line.trimEnd());
+
+	// lines = cleanMultiLineArray(lines, tabString);
+
+	// lines = lines.map(line => {
+	// 	const numTabs = getRepeatingMatchesCount(line, tabString);
+	// 	const indent = line.slice(0, numTabs * tabString.length);
+	// 	const content = line.slice(numTabs * tabString.length);
+
+	// 	const words = content.split(/\s+/);
+	// 	const cleanedWords = words.map(word => {
+	// 		const upperCaseWord = word.toUpperCase();
+	// 		return mysqlKeywordSet.has(upperCaseWord)
+	// 			? upperCaseWord
+	// 			: word;
+	// 	});
+	// 	return `${indent}${cleanedWords.join(" ")}`;
+	// });
+
+	lines = cleanMySqlQueryArray(lines, options);
+
 	return lines.join("\n");
 };

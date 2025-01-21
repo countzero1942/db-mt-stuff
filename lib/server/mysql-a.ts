@@ -18,21 +18,38 @@ export interface Customer extends RowDataPacket {
 	Country: string;
 }
 
+const access: ConnectionOptions = {
+	host: "172.27.80.1",
+	user: "me",
+	password: "xB6s#ZydFycuI^C",
+	database: "w3schools",
+	port: 3306,
+};
+
 export const selectCustomers = async (
 	query: string
 ): Promise<Customer[]> => {
-	const access: ConnectionOptions = {
-		host: "172.27.80.1",
-		user: "me",
-		password: "xB6s#ZydFycuI^C",
-		database: "w3schools",
-		port: 3306,
-	};
-
 	try {
 		const conn = await mysql.createConnection(access);
 
 		const [customers] = await conn.query<Customer[]>(query);
+
+		conn.end();
+
+		return customers;
+	} catch (err) {
+		log(err);
+		return [];
+	}
+};
+
+export const selectQuery = async (
+	query: string
+): Promise<RowDataPacket[]> => {
+	try {
+		const conn = await mysql.createConnection(access);
+
+		const [customers] = await conn.query<RowDataPacket[]>(query);
 
 		conn.end();
 
