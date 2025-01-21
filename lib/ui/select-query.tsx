@@ -4,7 +4,7 @@ import {
 	cleanMySqlQuery,
 	cleanMySqlQueryArray,
 } from "@/client-data/mysql";
-import { Customer, selectCustomers } from "@/server/mysql-a";
+import { Customer, doSelectQuery } from "@/server/mysql-a";
 import { CodeBlockProps, CodeBlock } from "@/ui/code-block";
 import { cleanMultiLineArray } from "@/utils/string";
 import {
@@ -25,16 +25,27 @@ import { set, splitWords } from "moderndash";
 import { RowDataPacket } from "mysql2/promise";
 import { Suspense, useState } from "react";
 
-const getTable = (rows?: RowDataPacket[]) => {
+export type ResultsTableProps = {
+	rows?: RowDataPacket[];
+	title?: string;
+	useTitleSplitting?: boolean;
+	useScrollArea?: boolean;
+};
+
+export const ResultsTable = (props: ResultsTableProps) => {
+	const rows = props.rows;
 	if (!rows) {
 		return <></>;
 	}
+
+	const title = props.title ?? "Results";
+	const useScrollArea = props.useScrollArea ?? true;
+	const useTitleSplitting = props.useTitleSplitting ?? true;
+
 	if (rows.length === 0) {
 		return (
 			<>
-				<Title order={3} my="md">
-					Results
-				</Title>
+				<h3>{title}</h3>
 				<p>No customers found.</p>
 			</>
 		);
@@ -42,7 +53,9 @@ const getTable = (rows?: RowDataPacket[]) => {
 
 	const keys = Object.keys(rows[0]);
 
-	const titles = keys.map(key => splitWords(key).join(" "));
+	const titles = useTitleSplitting
+		? keys.map(key => splitWords(key).join(" "))
+		: keys;
 
 	const tableHeadRow = (
 		<TableTr>
@@ -60,22 +73,45 @@ const getTable = (rows?: RowDataPacket[]) => {
 		</TableTr>
 	));
 
-	return (
-		<>
-			<h3>Results</h3>
-			<ScrollArea
-				type="auto"
-				h={300}
-				offsetScrollbars="y"
-				bd="1px solid var(--mantine-color-default-border)"
-				my="md"
-			>
-				<Table stickyHeader striped withColumnBorders>
+	const TheTable = () => {
+		if (useScrollArea) {
+			return (
+				<>
+					<h3>{title}</h3>
+					<ScrollArea
+						type="auto"
+						h={300}
+						offsetScrollbars="y"
+						bd="1px solid var(--mantine-color-default-border)"
+						my="md"
+					>
+						<Table stickyHeader striped withColumnBorders>
+							<TableThead>{tableHeadRow}</TableThead>
+							<TableTbody>{tableRows}</TableTbody>
+						</Table>
+					</ScrollArea>
+				</>
+			);
+		}
+		return (
+			<>
+				<h3>{title}</h3>
+				<Table
+					striped
+					withColumnBorders
+					bd="1px solid var(--mantine-color-default-border)"
+				>
 					<TableThead>{tableHeadRow}</TableThead>
 					<TableTbody>{tableRows}</TableTbody>
 				</Table>
-			</ScrollArea>
-		</>
+			</>
+		);
+	};
+
+	return (
+		<Suspense fallback={<p>Loading...</p>}>
+			<TheTable />
+		</Suspense>
 	);
 };
 
@@ -83,17 +119,21 @@ export type SelectCustomersSectionProps = {
 	sqlQuery: string;
 	title: string;
 	description?: string;
-	addRowNumbers?: boolean;
+	hasRowNumbersWrapper?: boolean;
+	useTitleSplitting?: boolean;
+	useScrollArea?: boolean;
 };
 
 export default function SelectQuerySection({
 	sqlQuery,
 	title,
 	description,
-	addRowNumbers,
+	hasRowNumbersWrapper,
+	useTitleSplitting,
+	useScrollArea,
 }: SelectCustomersSectionProps) {
 	const getCleanedQuery = () => {
-		if (addRowNumbers) {
+		if (hasRowNumbersWrapper) {
 			let lines = sqlQuery.split("\n").map(line => line.trimEnd());
 			lines = cleanMultiLineArray(lines, { extraIndents: 1 });
 			lines = [
@@ -112,7 +152,7 @@ export default function SelectQuerySection({
 
 	const cleanedSqlQuery = getCleanedQuery();
 
-	let [customers, setCustomers] = useState<Customer[] | undefined>(
+	let [rows, setRows] = useState<RowDataPacket[] | undefined>(
 		undefined
 	);
 
@@ -122,12 +162,12 @@ export default function SelectQuerySection({
 	};
 
 	async function handleSelectAllCustomers() {
-		const results = await selectCustomers(cleanedSqlQuery);
-		setCustomers(results);
+		const results = await doSelectQuery(cleanedSqlQuery);
+		setRows(results);
 	}
 
 	function handleClearAllCustomers() {
-		setCustomers(undefined);
+		setRows(undefined);
 	}
 
 	const Description = () => {
@@ -137,6 +177,8 @@ export default function SelectQuerySection({
 		return null;
 	};
 
+	const useTitleSplittingDefault = useTitleSplitting ?? true;
+
 	return (
 		<>
 			<h2>{title}</h2>
@@ -144,17 +186,21 @@ export default function SelectQuerySection({
 			<CodeBlock {...codeBlockProps} />
 			<Group my="md">
 				<Button onClick={handleSelectAllCustomers}>
-					Fetch Customers
+					Do query
 				</Button>
 				<Button
 					onClick={handleClearAllCustomers}
-					disabled={!customers}
+					disabled={!rows}
 				>
 					Clear Results
 				</Button>
 			</Group>
 			<Suspense fallback={<Title>Loading...</Title>}>
-				{getTable(customers)}
+				<ResultsTable
+					rows={rows}
+					useTitleSplitting={useTitleSplittingDefault}
+					useScrollArea={useScrollArea}
+				/>
 			</Suspense>
 		</>
 	);

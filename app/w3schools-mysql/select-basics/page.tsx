@@ -1,4 +1,4 @@
-import SelectQuerySection from "@/app/w3schools-mysql/select-basics/select-query";
+import SelectQuerySection from "@/ui/select-query";
 import { cleanMySqlQuery } from "@/client-data/mysql";
 import { cleanMultiLineString } from "@/utils/string";
 import { Divider } from "@mantine/core";
@@ -33,6 +33,11 @@ export default function SelectBasicsPage() {
 		) as q,
 		(SELECT @i:=0) AS x	
 	`;
+
+	const descriptionSelectColumnsUSAUSAUSA = `
+		SQL query is wrapped in a subquery
+		to add a row number column using 
+		'hasRowNumbersWrapper' prop.`;
 
 	return (
 		<article>
@@ -88,8 +93,8 @@ export default function SelectBasicsPage() {
 			<SelectQuerySection
 				title="SELECT specific columns: USA! USA! USA!"
 				sqlQuery={sqlSelectColumnsUSAUSAUSA}
-				addRowNumbers={true}
-				description="SQL query is wrapped in a subquery to add a row number column."
+				hasRowNumbersWrapper={true}
+				description={descriptionSelectColumnsUSAUSAUSA}
 			/>
 
 			<Divider my="2rem" />

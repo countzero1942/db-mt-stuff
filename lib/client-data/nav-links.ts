@@ -29,8 +29,8 @@ const navLinksDict: Record<string, NavLink[]> = {
 			href: "/w3schools-mysql/select-basics",
 		},
 		{
-			label: "More SELECT",
-			href: "/w3schools-mysql/more-select",
+			label: "Tables",
+			href: "/w3schools-mysql/tables",
 		},
 	],
 	"/styling": [
