@@ -1,63 +1,99 @@
-import { doMultiSelectQuery, doSelectQuery } from "@/server/mysql-a";
+"use client";
+
+import { doMultiMySqlQuery, doMySqlQuery } from "@/server/mysql-a";
 import { CodeBlockProps, CodeBlock } from "@/ui/code-block";
-import { ResultsTable } from "@/ui/select-query";
+import { QueryResultsTable } from "@/ui/select-query";
 import { Group, Button, Title } from "@mantine/core";
+import { log } from "console";
+import { set } from "moderndash";
 import { RowDataPacket } from "mysql2";
 import { title } from "process";
 import { useState, Suspense } from "react";
+import { capitalize } from "moderndash";
 
 export default function DescribeAllTablesSection() {
-	const query = `
-
-	`;
-
-	const getCleanedQuery = () => {
-		return "";
-	};
-
-	const cleanedSqlQuery = getCleanedQuery();
-
-	let [tables, setTables] = useState<RowDataPacket[][] | undefined>(
-		undefined
-	);
-
-	const codeBlockProps: CodeBlockProps = {
-		codeString: cleanedSqlQuery,
-		language: "sql",
-	};
+	let [tables, setTables] = useState<RowDataPacket[][]>([]);
+	let [tableNames, setTableNames] = useState<string[]>([]);
+	let [tablesQuery, setTablesQuery] = useState<string>("");
 
 	const getDescribeTablesQuery = (
 		tableList: RowDataPacket[]
-	): string | undefined => {
+	):
+		| { tableNames: string[]; describeTablesQuery: string }
+		| undefined => {
 		if (tableList.length === 0) return undefined;
 		const keys = Object.keys(tableList[0]);
 		if (keys.length === 0) return undefined;
 
-		const queries = tableList.map(
-			row => `DESCRIBE ${row[keys[0]]};`
+		const tableNames = tableList.map(row =>
+			capitalize(row[keys[0]])
 		);
 
-		return queries.join("\n");
+		const queries = tableNames.map(
+			tableName => `DESCRIBE ${tableName};`
+		);
+
+		return { tableNames, describeTablesQuery: queries.join("\n") };
 	};
 
 	async function handleDescribeAllTables() {
-		const tableList = await doSelectQuery("show tables");
-		const describeTablesQuery = getDescribeTablesQuery(tableList);
-		if (describeTablesQuery === undefined) return;
+		const tableList = await doMySqlQuery("show tables");
+		const tablesInfo = getDescribeTablesQuery(tableList);
+		if (tablesInfo === undefined) return;
 
-		const results = await doMultiSelectQuery(describeTablesQuery);
+		const results = await doMultiMySqlQuery(
+			tablesInfo.describeTablesQuery
+		);
 
 		setTables(results);
+		setTableNames(tablesInfo.tableNames);
+		setTablesQuery(tablesInfo.describeTablesQuery);
 	}
 
 	function handleClearAllTables() {
-		setTables(undefined);
+		setTables([]);
+		setTableNames([]);
+		setTablesQuery("");
 	}
+
+	const codeBlockProps: CodeBlockProps = {
+		codeString: tablesQuery,
+		language: "sql",
+	};
+
+	const TablesUI = () => {
+		if (tables.length === 0 || tableNames.length === 0) {
+			return null;
+		}
+		if (tables.length !== tableNames.length) {
+			console.error(
+				"Tables and tableNames arrays have different lengths"
+			);
+			return null;
+		}
+		const getTablesUI = () => {
+			return tables.map((table, i) => (
+				<>
+					<QueryResultsTable
+						key={tableNames[i]}
+						rows={table}
+						title={tableNames[i]}
+						useScrollArea={false}
+					/>
+				</>
+			));
+		};
+		return (
+			<div key="mydivkey">
+				<CodeBlock key="CodeBlock" {...codeBlockProps} />
+
+				{getTablesUI()}
+			</div>
+		);
+	};
 
 	return (
 		<>
-			<h2>{title}</h2>
-			<CodeBlock {...codeBlockProps} />
 			<Group my="md">
 				<Button onClick={handleDescribeAllTables}>
 					Do query
@@ -66,7 +102,9 @@ export default function DescribeAllTablesSection() {
 					Clear Results
 				</Button>
 			</Group>
-			<Suspense fallback={<Title>Loading...</Title>}></Suspense>
+			<Suspense fallback={<Title>Loading...</Title>}>
+				<TablesUI />
+			</Suspense>
 		</>
 	);
 }

@@ -1,6 +1,7 @@
 "use server";
 
-import { logobj } from "@/utils/log";
+import { getErrorMessage } from "@/utils/error";
+import { div, logobj } from "@/utils/log";
 import { log } from "console";
 import mysql, {
 	ConnectionOptions,
@@ -41,7 +42,7 @@ const multiAccess: ConnectionOptions = {
 	multipleStatements: true,
 };
 
-export const doSelectQuery = async (
+export const doMySqlQuery = async (
 	query: string
 ): Promise<RowDataPacket[]> => {
 	try {
@@ -53,12 +54,12 @@ export const doSelectQuery = async (
 
 		return rows;
 	} catch (err) {
-		log(err);
+		log(getErrorMessage(err));
 		return [];
 	}
 };
 
-export const doMultiSelectQuery = async (
+export const doMultiMySqlQuery = async (
 	query: string
 ): Promise<RowDataPacket[][]> => {
 	try {
@@ -70,24 +71,7 @@ export const doMultiSelectQuery = async (
 
 		return results;
 	} catch (err) {
-		log(err);
-		return [];
-	}
-};
-
-export const selectQuery = async (
-	query: string
-): Promise<RowDataPacket[]> => {
-	try {
-		const conn = await mysql.createConnection(access);
-
-		const [customers] = await conn.query<RowDataPacket[]>(query);
-
-		conn.end();
-
-		return customers;
-	} catch (err) {
-		log(err);
+		log(getErrorMessage(err));
 		return [];
 	}
 };

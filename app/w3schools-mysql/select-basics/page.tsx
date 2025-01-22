@@ -1,4 +1,4 @@
-import SelectQuerySection from "@/ui/select-query";
+import QuerySection from "@/ui/select-query";
 import { cleanMySqlQuery } from "@/client-data/mysql";
 import { cleanMultiLineString } from "@/utils/string";
 import { Divider } from "@mantine/core";
@@ -48,49 +48,49 @@ export default function SelectBasicsPage() {
 				SELECT commands.
 			</p>
 
-			<SelectQuerySection
+			<QuerySection
 				title="SELECT all columns from Customers"
 				sqlQuery="select * from Customers"
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectQuerySection
+			<QuerySection
 				title="SELECT all columns from Customers with limit 10"
 				sqlQuery="select * from Customers limit 10"
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectQuerySection
+			<QuerySection
 				title="SELECT last 10 Customers"
 				sqlQuery={sqlLast10Customers}
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectQuerySection
+			<QuerySection
 				title="SELECT Customers from Mexico with WHERE"
 				sqlQuery={sqlCustomersFromMexico}
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectQuerySection
+			<QuerySection
 				title="SELECT DISTINCT Country from Customers"
 				sqlQuery="SELECT DISTINCT Country FROM Customers;"
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectQuerySection
+			<QuerySection
 				title="SELECT DISTINCT Countries with Row number"
 				sqlQuery={sqlDistinctCountriesNumbered}
 			/>
 
 			<Divider my="2rem" />
 
-			<SelectQuerySection
+			<QuerySection
 				title="SELECT specific columns: USA! USA! USA!"
 				sqlQuery={sqlSelectColumnsUSAUSAUSA}
 				hasRowNumbersWrapper={true}

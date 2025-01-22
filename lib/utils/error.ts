@@ -3,11 +3,13 @@ import { getType } from "@/utils/types";
 
 /**
  * Puts together the Error.name and Error.message
- * @param item The Error object.
+ * @param err The Error object.
  * @returns The error message.
  */
-export const getErrorMessage = (item: Error) =>
-	`${item.name}: '${item.message}'`;
+export const getErrorMessage = (err: unknown) => {
+	const errObj = getError(err);
+	return errObj.fullMessage;
+};
 
 /**
  * Simple type for extracting error throw info

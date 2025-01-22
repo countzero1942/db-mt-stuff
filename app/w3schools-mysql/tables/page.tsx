@@ -1,4 +1,5 @@
-import SelectQuerySection from "@/ui/select-query";
+import DescribeAllTablesSection from "@/app/w3schools-mysql/tables/describe-all-tables-section";
+import QuerySection from "@/ui/select-query";
 import { Divider } from "@mantine/core";
 
 export default function TablesPage() {
@@ -11,7 +12,7 @@ export default function TablesPage() {
 				TABLE commands.
 			</p>
 
-			<SelectQuerySection
+			<QuerySection
 				title="Show Tables"
 				sqlQuery="show tables"
 				useTitleSplitting={false}
@@ -19,7 +20,7 @@ export default function TablesPage() {
 
 			<Divider my="2rem" />
 
-			<SelectQuerySection
+			<QuerySection
 				title="Describe Categories Table"
 				sqlQuery="describe categories"
 				useTitleSplitting={false}
@@ -29,6 +30,10 @@ export default function TablesPage() {
 			<Divider my="2rem" />
 
 			<h2>Describe all Tables</h2>
+
+			<DescribeAllTablesSection />
+
+			<Divider my="2rem" />
 		</article>
 	);
 }

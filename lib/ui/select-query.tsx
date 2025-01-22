@@ -4,7 +4,7 @@ import {
 	cleanMySqlQuery,
 	cleanMySqlQueryArray,
 } from "@/client-data/mysql";
-import { Customer, doSelectQuery } from "@/server/mysql-a";
+import { Customer, doMySqlQuery } from "@/server/mysql-a";
 import { CodeBlockProps, CodeBlock } from "@/ui/code-block";
 import { cleanMultiLineArray } from "@/utils/string";
 import {
@@ -30,9 +30,10 @@ export type ResultsTableProps = {
 	title?: string;
 	useTitleSplitting?: boolean;
 	useScrollArea?: boolean;
+	key?: string;
 };
 
-export const ResultsTable = (props: ResultsTableProps) => {
+export const QueryResultsTable = (props: ResultsTableProps) => {
 	const rows = props.rows;
 	if (!rows) {
 		return <></>;
@@ -94,7 +95,7 @@ export const ResultsTable = (props: ResultsTableProps) => {
 			);
 		}
 		return (
-			<>
+			<div key={props.key}>
 				<h3>{title}</h3>
 				<Table
 					striped
@@ -104,7 +105,7 @@ export const ResultsTable = (props: ResultsTableProps) => {
 					<TableThead>{tableHeadRow}</TableThead>
 					<TableTbody>{tableRows}</TableTbody>
 				</Table>
-			</>
+			</div>
 		);
 	};
 
@@ -115,7 +116,7 @@ export const ResultsTable = (props: ResultsTableProps) => {
 	);
 };
 
-export type SelectCustomersSectionProps = {
+export type QuerySectionProps = {
 	sqlQuery: string;
 	title: string;
 	description?: string;
@@ -124,14 +125,14 @@ export type SelectCustomersSectionProps = {
 	useScrollArea?: boolean;
 };
 
-export default function SelectQuerySection({
+export default function QuerySection({
 	sqlQuery,
 	title,
 	description,
 	hasRowNumbersWrapper,
 	useTitleSplitting,
 	useScrollArea,
-}: SelectCustomersSectionProps) {
+}: QuerySectionProps) {
 	const getCleanedQuery = () => {
 		if (hasRowNumbersWrapper) {
 			let lines = sqlQuery.split("\n").map(line => line.trimEnd());
@@ -162,7 +163,7 @@ export default function SelectQuerySection({
 	};
 
 	async function handleSelectAllCustomers() {
-		const results = await doSelectQuery(cleanedSqlQuery);
+		const results = await doMySqlQuery(cleanedSqlQuery);
 		setRows(results);
 	}
 
@@ -196,7 +197,7 @@ export default function SelectQuerySection({
 				</Button>
 			</Group>
 			<Suspense fallback={<Title>Loading...</Title>}>
-				<ResultsTable
+				<QueryResultsTable
 					rows={rows}
 					useTitleSplitting={useTitleSplittingDefault}
 					useScrollArea={useScrollArea}
