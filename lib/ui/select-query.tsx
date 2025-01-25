@@ -20,65 +20,69 @@ import {
 	Button,
 	Group,
 } from "@mantine/core";
+import { log, table } from "console";
 import { get } from "http";
 import { set, splitWords } from "moderndash";
 import { RowDataPacket } from "mysql2/promise";
-import { Suspense, useState } from "react";
+import React, { Suspense, useState } from "react";
 
 export type ResultsTableProps = {
-	rows?: RowDataPacket[];
-	title?: string;
+	tableRows?: RowDataPacket[];
+	tableTitle?: string;
 	useTitleSplitting?: boolean;
 	useScrollArea?: boolean;
-	key?: string;
 };
 
-export const QueryResultsTable = (props: ResultsTableProps) => {
-	const rows = props.rows;
-	if (!rows) {
+export const QueryResultsTable: React.FC<ResultsTableProps> = ({
+	tableRows,
+	tableTitle,
+	useTitleSplitting,
+	useScrollArea,
+}: ResultsTableProps) => {
+	if (!tableRows) {
 		return <></>;
 	}
 
-	const title = props.title ?? "Results";
-	const useScrollArea = props.useScrollArea ?? true;
-	const useTitleSplitting = props.useTitleSplitting ?? true;
+	const safeTableTitle = tableTitle ?? "Results";
+	const safeUseScrollArea = useScrollArea ?? true;
+	const safeUseTitleSplitting = useTitleSplitting ?? true;
 
-	if (rows.length === 0) {
+	if (tableRows.length === 0) {
 		return (
 			<>
-				<h3>{title}</h3>
+				<h3>{safeTableTitle}</h3>
 				<p>No customers found.</p>
 			</>
 		);
 	}
 
-	const keys = Object.keys(rows[0]);
+	const tableKeys = Object.keys(tableRows[0]);
 
-	const titles = useTitleSplitting
-		? keys.map(key => splitWords(key).join(" "))
-		: keys;
+	const tableTitles = safeUseTitleSplitting
+		? tableKeys.map(tableKey => splitWords(tableKey).join(" "))
+		: tableKeys;
 
 	const tableHeadRow = (
 		<TableTr>
-			{titles.map(title => (
+			{tableTitles.map(title => (
 				<TableTh key={title}>{title}</TableTh>
 			))}
 		</TableTr>
 	);
 
-	const tableRows = rows.map((row, index) => (
+	const tableRowsUI = tableRows.map((row, index) => (
 		<TableTr key={`row: ${index}`}>
-			{keys.map((key, index) => (
+			{tableKeys.map((key, index) => (
 				<TableTd key={`${key}-${index}`}>{row[key]}</TableTd>
 			))}
 		</TableTr>
 	));
 
 	const TheTable = () => {
-		if (useScrollArea) {
+		if (safeUseScrollArea) {
 			return (
-				<>
-					<h3>{title}</h3>
+				<div>
+					<h3>{safeTableTitle}</h3>
 					<ScrollArea
 						type="auto"
 						h={300}
@@ -88,29 +92,29 @@ export const QueryResultsTable = (props: ResultsTableProps) => {
 					>
 						<Table stickyHeader striped withColumnBorders>
 							<TableThead>{tableHeadRow}</TableThead>
-							<TableTbody>{tableRows}</TableTbody>
+							<TableTbody>{tableRowsUI}</TableTbody>
 						</Table>
 					</ScrollArea>
-				</>
+				</div>
 			);
 		}
 		return (
-			<div key={props.key}>
-				<h3>{title}</h3>
+			<div>
+				<h3>{safeTableTitle}</h3>
 				<Table
 					striped
 					withColumnBorders
 					bd="1px solid var(--mantine-color-default-border)"
 				>
 					<TableThead>{tableHeadRow}</TableThead>
-					<TableTbody>{tableRows}</TableTbody>
+					<TableTbody>{tableRowsUI}</TableTbody>
 				</Table>
 			</div>
 		);
 	};
 
 	return (
-		<Suspense fallback={<p>Loading...</p>}>
+		<Suspense key={Math.random() + 10} fallback={<p>Loading...</p>}>
 			<TheTable />
 		</Suspense>
 	);
@@ -196,9 +200,12 @@ export default function QuerySection({
 					Clear Results
 				</Button>
 			</Group>
-			<Suspense fallback={<Title>Loading...</Title>}>
+			<Suspense
+				key={Math.random() + 9}
+				fallback={<Title>Loading...</Title>}
+			>
 				<QueryResultsTable
-					rows={rows}
+					tableRows={rows}
 					useTitleSplitting={useTitleSplittingDefault}
 					useScrollArea={useScrollArea}
 				/>

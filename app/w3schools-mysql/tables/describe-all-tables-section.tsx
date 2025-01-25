@@ -1,5 +1,4 @@
 "use client";
-
 import { doMultiMySqlQuery, doMySqlQuery } from "@/server/mysql-a";
 import { CodeBlockProps, CodeBlock } from "@/ui/code-block";
 import { QueryResultsTable } from "@/ui/select-query";
@@ -71,21 +70,25 @@ export default function DescribeAllTablesSection() {
 			);
 			return null;
 		}
+
 		const getTablesUI = () => {
-			return tables.map((table, i) => (
-				<>
+			return tables.map((table, i) => {
+				const keyValue = `table-${i}`;
+				return (
 					<QueryResultsTable
-						key={tableNames[i]}
-						rows={table}
-						title={tableNames[i]}
+						key={keyValue}
+						// keyProp={keyValue}
+						tableRows={table}
+						tableTitle={tableNames[i]}
 						useScrollArea={false}
 					/>
-				</>
-			));
+				);
+			});
 		};
+
 		return (
-			<div key="mydivkey">
-				<CodeBlock key="CodeBlock" {...codeBlockProps} />
+			<div>
+				<CodeBlock {...codeBlockProps} />
 
 				{getTablesUI()}
 			</div>
